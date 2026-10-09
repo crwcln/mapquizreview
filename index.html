@@ -290,6 +290,12 @@
         .teaser-ledger-stat { border: 1px solid rgba(200,166,89,.2); padding: 13px; color: rgba(220,219,207,.7); font: 500 .75rem 'Plus Jakarta Sans', Arial, sans-serif; }
         .teaser-ledger-stat strong { display: block; color: #d8bd79; font: 400 1.6rem Georgia,serif; margin-bottom: 5px; }
         .teaser-ledger textarea { width: 100%; min-height: 88px; resize: vertical; padding: 12px; color: #eee8d7; background: rgba(255,255,255,.06); border: 1px solid rgba(200,166,89,.3); outline: none; font: 500 .9rem/1.5 'Plus Jakarta Sans',Arial,sans-serif; }
+        .teaser-public-reaction { width: min(100%, 440px); margin-top: 24px; padding: 16px; background: rgba(5,9,18,.66); border: 1px solid rgba(200,166,89,.25); text-align: left; }
+        .teaser-public-reaction label, .teaser-ledger label { display: block; margin: 0 0 7px; color: rgba(220,219,207,.78); font: 600 .75rem 'Plus Jakarta Sans',Arial,sans-serif; }
+        .teaser-public-reaction input, .teaser-public-reaction textarea, .teaser-ledger input { width: 100%; margin-bottom: 9px; padding: 10px 12px; color: #eee8d7; background: rgba(255,255,255,.06); border: 1px solid rgba(200,166,89,.3); outline: none; font: 500 .9rem/1.5 'Plus Jakarta Sans',Arial,sans-serif; }
+        .teaser-public-reaction textarea { min-height: 64px; resize: vertical; }
+        .teaser-auth { max-width: 380px; margin: 22px auto 0; }
+        .teaser-reaction { padding: 12px 0; border-top: 1px solid rgba(200,166,89,.16); color: rgba(220,219,207,.82); font: 500 .82rem/1.5 'Plus Jakarta Sans',Arial,sans-serif; white-space: pre-wrap; overflow-wrap: anywhere; }
         .teaser-ledger button { margin-top: 10px; padding: 10px 15px; color: #17130a; background: #c5a858; font: 700 .75rem 'Plus Jakarta Sans',Arial,sans-serif; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
         #teaser-reactions { max-height: 180px; overflow: auto; margin-top: 14px; }
         .teaser-reaction { padding: 10px 0; border-top: 1px solid rgba(200,166,89,.16); color: rgba(220,219,207,.82); font: 500 .82rem/1.5 'Plus Jakarta Sans',Arial,sans-serif; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -353,24 +359,52 @@
             dialog.setAttribute('tabindex', '-1');
             dialog.setAttribute('aria-modal', 'true');
             dialog.setAttribute('aria-label', 'HERO teaser and visitor ledger');
-            dialog.innerHTML = '<div class="teaser-scene"><span class="teaser-ambient" aria-hidden="true"></span><span class="teaser-light teaser-light-one" aria-hidden="true"></span><span class="teaser-light teaser-light-two" aria-hidden="true"></span><span class="teaser-light teaser-light-three" aria-hidden="true"></span><span class="teaser-fog teaser-fog-one" aria-hidden="true"></span><span class="teaser-fog teaser-fog-two" aria-hidden="true"></span><span class="teaser-fog teaser-fog-three" aria-hidden="true"></span><div class="teaser-content"><div class="teaser-art" aria-hidden="true"><span class="teaser-art-glyph">H</span></div><h1 class="teaser-wordmark">HERO</h1><p class="teaser-tagline">SOMETHING IS COMING</p><p class="teaser-date">OCTOBER 20TH</p></div><section class="teaser-ledger" hidden aria-labelledby="teaser-ledger-title"><h2 id="teaser-ledger-title">A record of your visit</h2><p>The pages keep a modest account of their passage: each click, drag, marked line, and keystroke.</p><div class="teaser-ledger-grid"><div class="teaser-ledger-stat"><strong id="teaser-clicks">0</strong>Page clicks</div><div class="teaser-ledger-stat"><strong id="teaser-drags">0</strong>Drags</div><div class="teaser-ledger-stat"><strong id="teaser-selections">0</strong>Text selections</div><div class="teaser-ledger-stat"><strong id="teaser-typing">0</strong>Keystrokes</div></div><label for="teaser-thought">What counsel or impression would you enter in the record?</label><textarea id="teaser-thought" maxlength="500" placeholder="Set down your thoughts here"></textarea><button id="teaser-send" type="button">Commit to the ledger</button><p id="teaser-feedback" aria-live="polite"></p><div id="teaser-reactions" aria-live="polite"></div></section></div>';
+            dialog.innerHTML = '<div class="teaser-scene"><span class="teaser-ambient" aria-hidden="true"></span><span class="teaser-light teaser-light-one" aria-hidden="true"></span><span class="teaser-light teaser-light-two" aria-hidden="true"></span><span class="teaser-light teaser-light-three" aria-hidden="true"></span><span class="teaser-fog teaser-fog-one" aria-hidden="true"></span><span class="teaser-fog teaser-fog-two" aria-hidden="true"></span><span class="teaser-fog teaser-fog-three" aria-hidden="true"></span><div class="teaser-content"><div class="teaser-art" aria-hidden="true"><span class="teaser-art-glyph">H</span></div><h1 class="teaser-wordmark">HERO</h1><p class="teaser-tagline">SOMETHING IS COMING</p><p class="teaser-date">OCTOBER 20TH</p><section class="teaser-public-reaction" aria-label="Send a reaction"><label for="teaser-public-name">Your name</label><input id="teaser-public-name" maxlength="60" placeholder="Name for the record"><label for="teaser-public-thought">Your thoughts</label><textarea id="teaser-public-thought" maxlength="500" placeholder="Set down your thoughts here…"></textarea><p class="teaser-tagline" style="font-size:.62rem;letter-spacing:.08em;text-indent:0;margin:0 0 8px">Your name and dispatch will be visible to site developers.</p><button id="teaser-public-send" type="button">Send your dispatch</button><p id="teaser-public-feedback" aria-live="polite"></p></section></div><section class="teaser-ledger" hidden aria-labelledby="teaser-ledger-title"><h2 id="teaser-ledger-title">Developer activity ledger</h2><p>Visitor activity and public dispatches, kept for the keeper of this atlas.</p><div id="teaser-dev-auth" class="teaser-auth"><label for="teaser-dev-password">Dev password</label><input type="password" id="teaser-dev-password" autocomplete="current-password" placeholder="Enter developer password"><button id="teaser-dev-unlock" type="button">Unlock the ledger</button><p id="teaser-dev-feedback" aria-live="polite"></p></div><div id="teaser-dev-data" hidden><div class="teaser-ledger-grid"><div class="teaser-ledger-stat"><strong id="teaser-clicks">0</strong>Page clicks</div><div class="teaser-ledger-stat"><strong id="teaser-drags">0</strong>Drags</div><div class="teaser-ledger-stat"><strong id="teaser-selections">0</strong>Text selections</div><div class="teaser-ledger-stat"><strong id="teaser-typing">0</strong>Keystrokes</div></div><h3>Dispatches from visitors</h3><div id="teaser-reactions" aria-live="polite"></div></div></section></div>';
             var content = dialog.querySelector('.teaser-content'), ledger = dialog.querySelector('.teaser-ledger');
+            var devAuth = dialog.querySelector('#teaser-dev-auth'), devData = dialog.querySelector('#teaser-dev-data'), reactionUnsubscribe = null, teaserDevAuthorized = false;
             function refresh() {
                 Object.keys(counts).forEach(function (key) { var el = dialog.querySelector('#teaser-' + key); if (el) el.textContent = counts[key]; });
                 try { sessionStorage.setItem('heroTeaserInteractions', JSON.stringify(counts)); } catch (e) {}
             }
             function renderReactions() {
-                var box = dialog.querySelector('#teaser-reactions'), items = [];
-                try { items = JSON.parse(localStorage.getItem('heroTeaserReactions') || '[]'); } catch (e) {}
-                box.innerHTML = '';
-                items.slice().reverse().forEach(function (item) { var row = document.createElement('div'); row.className = 'teaser-reaction'; row.textContent = item; box.appendChild(row); });
+                var box = dialog.querySelector('#teaser-reactions');
+                if (!db || !userId) { box.textContent = 'The records cannot be reached while offline.'; return; }
+                if (reactionUnsubscribe) reactionUnsubscribe();
+                reactionUnsubscribe = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('heroReactions').orderBy('createdAt', 'desc').onSnapshot(function (snapshot) {
+                    box.innerHTML = '';
+                    if (snapshot.empty) { box.textContent = 'No dispatches have yet been entered.'; return; }
+                    snapshot.forEach(function (doc) {
+                        var data = doc.data(), row = document.createElement('div'), name = document.createElement('strong'), message = document.createElement('div'), date = document.createElement('small');
+                        row.className = 'teaser-reaction'; name.textContent = data.name || 'Anonymous'; message.textContent = data.message || ''; date.textContent = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : 'Just received';
+                        row.append(name, message, date); box.appendChild(row);
+                    });
+                }, function (error) { console.error('Reaction log:', error); box.textContent = 'The dispatch ledger could not be read.'; });
             }
-            dialog.querySelector('#teaser-send').addEventListener('click', function () {
-                var field = dialog.querySelector('#teaser-thought'), thought = field.value.trim();
-                if (!thought) { dialog.querySelector('#teaser-feedback').textContent = 'Pray, set down a few words first.'; field.focus(); return; }
-                var items = []; try { items = JSON.parse(localStorage.getItem('heroTeaserReactions') || '[]'); } catch (e) {}
-                items.push(thought); try { localStorage.setItem('heroTeaserReactions', JSON.stringify(items.slice(-30))); } catch (e) {}
-                field.value = ''; dialog.querySelector('#teaser-feedback').textContent = 'Your words have been entered into this local ledger.'; renderReactions();
+            function revealDevData() {
+                if (teaserDevAuthorized) {
+                    devAuth.hidden = true; devData.hidden = false; refresh(); renderReactions();
+                } else { devAuth.hidden = false; devData.hidden = true; }
+            }
+            async function unlockTeaserDev() {
+                var input = dialog.querySelector('#teaser-dev-password'), feedback = dialog.querySelector('#teaser-dev-feedback');
+                if (!input.value) { feedback.textContent = 'Enter the developer password to inspect this ledger.'; return; }
+                var ok = await checkPassword('dev', input.value);
+                if (ok) { teaserDevAuthorized = true; sessionStorage.setItem('mq_devUnlocked', '1'); input.value = ''; feedback.textContent = ''; revealDevData(); }
+                else feedback.textContent = ok === false ? 'That password was not accepted.' : 'The access service could not be reached.';
+            }
+            dialog.querySelector('#teaser-dev-unlock').addEventListener('click', unlockTeaserDev);
+            dialog.querySelector('#teaser-dev-password').addEventListener('keydown', function (event) { if (event.key === 'Enter') unlockTeaserDev(); });
+            dialog.querySelector('#teaser-public-send').addEventListener('click', async function () {
+                var nameField = dialog.querySelector('#teaser-public-name'), messageField = dialog.querySelector('#teaser-public-thought'), feedback = dialog.querySelector('#teaser-public-feedback');
+                var name = nameField.value.trim(), message = messageField.value.trim();
+                if (!name || !message) { feedback.textContent = 'Please enter your name and a few words for the record.'; (!name ? nameField : messageField).focus(); return; }
+                if (!db || !userId) { feedback.textContent = 'The record office is not yet available. Please try again shortly.'; return; }
+                var button = dialog.querySelector('#teaser-public-send'); button.disabled = true;
+                try {
+                    await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('heroReactions').add({ name: name.slice(0, 60), message: message.slice(0, 500), userId: userId, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    nameField.value = ''; messageField.value = ''; feedback.textContent = 'Your dispatch has been entered into the record.';
+                } catch (error) { console.error('Could not save reaction:', error); feedback.textContent = 'Your dispatch could not be delivered. Please try again.'; }
+                finally { button.disabled = false; }
             });
             if (config.artworkImagePath) { var art = dialog.querySelector('.teaser-art'), img = document.createElement('img'); img.className = 'teaser-art-image'; img.src = config.artworkImagePath; img.alt = 'Gold H emblem in a square frame'; img.onload = function () { var glyph = dialog.querySelector('.teaser-art-glyph'); if (glyph) glyph.hidden = true; }; art.appendChild(img); }
             dialog.addEventListener('cancel', function (event) { event.preventDefault(); });
@@ -382,9 +416,9 @@
                 if (dialog.open && event.key === 'Escape') { event.preventDefault(); return; }
                 if (dialog.open && !event.ctrlKey && !event.metaKey && !event.altKey && event.key.length === 1) {
                     keyBuffer = (keyBuffer + event.key.toLowerCase()).slice(-5);
-                    if (keyBuffer === 'manoj') { content.hidden = true; ledger.hidden = false; refresh(); renderReactions(); dialog.focus(); }
+                    if (keyBuffer === 'manoj') { content.hidden = true; ledger.hidden = false; revealDevData(); dialog.focus(); }
                 }
-                if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey && !(dialog.open && dialog.querySelector('#teaser-thought').contains(event.target))) { counts.typing++; refresh(); }
+                if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey && !(dialog.open && dialog.querySelector('#teaser-dev-password').contains(event.target))) { counts.typing++; refresh(); }
             }, true);
             document.addEventListener('click', function (event) { if (!dialog.open || !dialog.contains(event.target)) { counts.clicks++; refresh(); } }, true);
             var down = null;
