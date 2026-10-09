@@ -293,7 +293,6 @@
         .teaser-ledger button { margin-top: 10px; padding: 10px 15px; color: #17130a; background: #c5a858; font: 700 .75rem 'Plus Jakarta Sans',Arial,sans-serif; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
         #teaser-reactions { max-height: 180px; overflow: auto; margin-top: 14px; }
         .teaser-reaction { padding: 10px 0; border-top: 1px solid rgba(200,166,89,.16); color: rgba(220,219,207,.82); font: 500 .82rem/1.5 'Plus Jakarta Sans',Arial,sans-serif; white-space: pre-wrap; overflow-wrap: anywhere; }
-        .teaser-close { position: absolute; top: 18px; right: 18px; border: 1px solid rgba(200,166,89,.35); color: #d8bd79; background: rgba(5,9,18,.65); padding: 9px 12px; cursor: pointer; font: 600 .7rem 'Plus Jakarta Sans',Arial,sans-serif; letter-spacing: .1em; }
         @media (max-width: 560px) { .teaser-ledger { padding: 20px; } }
         @media (prefers-reduced-motion: reduce) { #hero-teaser *, #hero-teaser::before, #hero-teaser::after { animation: none !important; scroll-behavior: auto !important; } .teaser-fog { translate: 0 0; } }
         .cover-spin { border: 4px solid rgba(15,168,154,.2); border-top-color: var(--brand-500); }
@@ -354,7 +353,7 @@
             dialog.setAttribute('tabindex', '-1');
             dialog.setAttribute('aria-modal', 'true');
             dialog.setAttribute('aria-label', 'HERO teaser and visitor ledger');
-            dialog.innerHTML = '<div class="teaser-scene"><span class="teaser-ambient" aria-hidden="true"></span><span class="teaser-light teaser-light-one" aria-hidden="true"></span><span class="teaser-light teaser-light-two" aria-hidden="true"></span><span class="teaser-light teaser-light-three" aria-hidden="true"></span><span class="teaser-fog teaser-fog-one" aria-hidden="true"></span><span class="teaser-fog teaser-fog-two" aria-hidden="true"></span><span class="teaser-fog teaser-fog-three" aria-hidden="true"></span><button class="teaser-close" type="button" aria-label="Close teaser">CLOSE</button><div class="teaser-content"><div class="teaser-art" aria-hidden="true"><span class="teaser-art-glyph">H</span></div><h1 class="teaser-wordmark">HERO</h1><p class="teaser-tagline">SOMETHING IS COMING</p><p class="teaser-date">OCTOBER 20TH</p></div><section class="teaser-ledger" hidden aria-labelledby="teaser-ledger-title"><h2 id="teaser-ledger-title">A record of your visit</h2><p>The pages keep a modest account of their passage: each click, drag, marked line, and keystroke.</p><div class="teaser-ledger-grid"><div class="teaser-ledger-stat"><strong id="teaser-clicks">0</strong>Page clicks</div><div class="teaser-ledger-stat"><strong id="teaser-drags">0</strong>Drags</div><div class="teaser-ledger-stat"><strong id="teaser-selections">0</strong>Text selections</div><div class="teaser-ledger-stat"><strong id="teaser-typing">0</strong>Keystrokes</div></div><label for="teaser-thought">What counsel or impression would you enter in the record?</label><textarea id="teaser-thought" maxlength="500" placeholder="Set down your thoughts here"></textarea><button id="teaser-send" type="button">Commit to the ledger</button><p id="teaser-feedback" aria-live="polite"></p><div id="teaser-reactions" aria-live="polite"></div></section></div>';
+            dialog.innerHTML = '<div class="teaser-scene"><span class="teaser-ambient" aria-hidden="true"></span><span class="teaser-light teaser-light-one" aria-hidden="true"></span><span class="teaser-light teaser-light-two" aria-hidden="true"></span><span class="teaser-light teaser-light-three" aria-hidden="true"></span><span class="teaser-fog teaser-fog-one" aria-hidden="true"></span><span class="teaser-fog teaser-fog-two" aria-hidden="true"></span><span class="teaser-fog teaser-fog-three" aria-hidden="true"></span><div class="teaser-content"><div class="teaser-art" aria-hidden="true"><span class="teaser-art-glyph">H</span></div><h1 class="teaser-wordmark">HERO</h1><p class="teaser-tagline">SOMETHING IS COMING</p><p class="teaser-date">OCTOBER 20TH</p></div><section class="teaser-ledger" hidden aria-labelledby="teaser-ledger-title"><h2 id="teaser-ledger-title">A record of your visit</h2><p>The pages keep a modest account of their passage: each click, drag, marked line, and keystroke.</p><div class="teaser-ledger-grid"><div class="teaser-ledger-stat"><strong id="teaser-clicks">0</strong>Page clicks</div><div class="teaser-ledger-stat"><strong id="teaser-drags">0</strong>Drags</div><div class="teaser-ledger-stat"><strong id="teaser-selections">0</strong>Text selections</div><div class="teaser-ledger-stat"><strong id="teaser-typing">0</strong>Keystrokes</div></div><label for="teaser-thought">What counsel or impression would you enter in the record?</label><textarea id="teaser-thought" maxlength="500" placeholder="Set down your thoughts here"></textarea><button id="teaser-send" type="button">Commit to the ledger</button><p id="teaser-feedback" aria-live="polite"></p><div id="teaser-reactions" aria-live="polite"></div></section></div>';
             var content = dialog.querySelector('.teaser-content'), ledger = dialog.querySelector('.teaser-ledger');
             function refresh() {
                 Object.keys(counts).forEach(function (key) { var el = dialog.querySelector('#teaser-' + key); if (el) el.textContent = counts[key]; });
@@ -366,8 +365,6 @@
                 box.innerHTML = '';
                 items.slice().reverse().forEach(function (item) { var row = document.createElement('div'); row.className = 'teaser-reaction'; row.textContent = item; box.appendChild(row); });
             }
-            dialog.querySelector('.teaser-close').addEventListener('click', function () { dialog.close(); });
-            dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
             dialog.querySelector('#teaser-send').addEventListener('click', function () {
                 var field = dialog.querySelector('#teaser-thought'), thought = field.value.trim();
                 if (!thought) { dialog.querySelector('#teaser-feedback').textContent = 'Pray, set down a few words first.'; field.focus(); return; }
@@ -376,13 +373,16 @@
                 field.value = ''; dialog.querySelector('#teaser-feedback').textContent = 'Your words have been entered into this local ledger.'; renderReactions();
             });
             if (config.artworkImagePath) { var art = dialog.querySelector('.teaser-art'), img = document.createElement('img'); img.className = 'teaser-art-image'; img.src = config.artworkImagePath; img.alt = 'Gold H emblem in a square frame'; img.onload = function () { var glyph = dialog.querySelector('.teaser-art-glyph'); if (glyph) glyph.hidden = true; }; art.appendChild(img); }
-            dialog.addEventListener('cancel', function (event) { event.preventDefault(); dialog.close(); });
+            dialog.addEventListener('cancel', function (event) { event.preventDefault(); });
             document.body.insertBefore(dialog, document.body.firstChild);
+            dialog.showModal();
+            dialog.focus();
             var keyBuffer = '';
             document.addEventListener('keydown', function (event) {
-                if (!dialog.open && !event.ctrlKey && !event.metaKey && !event.altKey && event.key.length === 1) {
+                if (dialog.open && event.key === 'Escape') { event.preventDefault(); return; }
+                if (dialog.open && !event.ctrlKey && !event.metaKey && !event.altKey && event.key.length === 1) {
                     keyBuffer = (keyBuffer + event.key.toLowerCase()).slice(-5);
-                    if (keyBuffer === 'manoj') { content.hidden = true; ledger.hidden = false; refresh(); renderReactions(); dialog.showModal(); dialog.focus(); }
+                    if (keyBuffer === 'manoj') { content.hidden = true; ledger.hidden = false; refresh(); renderReactions(); dialog.focus(); }
                 }
                 if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey && !(dialog.open && dialog.querySelector('#teaser-thought').contains(event.target))) { counts.typing++; refresh(); }
             }, true);
