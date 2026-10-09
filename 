@@ -1,0 +1,62 @@
+[33mcommit e87c80ec9bd74111c4ac1f62af667ec3945c9e4f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: cfa93de 16f6dfc
+Author: Caleb <mrcrow098@gmail.com>
+Date:   Mon Oct 5 22:24:56 2026 -0400
+
+    Merge branch 'main' of https://github.com/crwcln/mapquizreview
+
+[33mcommit cfa93de83c3875245be77871785d7d4636e0e5c1[m
+Author: Caleb <mrcrow098@gmail.com>
+Date:   Mon Oct 5 22:24:53 2026 -0400
+
+    Revert "V3"
+    
+    This reverts commit bd73f7f838c35bb56b080d113474acd1d11cdfde.
+
+[33mcommit 16f6dfcb9c08f4bb91ba73a27d288ec644677142[m
+Author: Caleb <mrcrow098@gmail.com>
+Date:   Mon Oct 5 22:17:03 2026 -0400
+
+    V3.1
+
+[33mcommit bd73f7f838c35bb56b080d113474acd1d11cdfde[m
+Author: Caleb <mrcrow098@gmail.com>
+Date:   Mon Oct 5 21:57:40 2026 -0400
+
+    V3
+
+[33mcommit 0abeb2b1aa8ff83ba671f8038af96eab128838da[m
+Author: Caleb <mrcrow098@gmail.com>
+Date:   Mon Oct 5 17:00:32 2026 -0400
+
+    V2
+
+[33mcommit 2497cb1c79edefba9e1900ade9a57d0b83f5e1a1[m
+Author: Caleb <mrcrow098@gmail.com>
+Date:   Mon Oct 5 00:09:58 2026 -0400
+
+    Theme Change
+
+[33mcommit cbf1f7b5e0aeebe2abcd40552bfbf9a823ab6e7c[m
+Author: Caleb <mrcrow098@gmail.com>
+Date:   Sun Oct 4 17:24:03 2026 -0400
+
+    V1.4.1
+
+[33mcommit b9fc606bc4d417ba9e5850682787e6af0819a03e[m
+Author: Caleb <mrcrow098@gmail.com>
+Date:   Sun Oct 4 17:13:31 2026 -0400
+
+    V1.4
+
+[33mcommit 2f921515e3781a340d0bd77205bb41fa2663403b[m
+Author: Caleb <mrcrow098@gmail.com>
+Date:   Sun Oct 4 16:54:52 2026 -0400
+
+    V1
+
+[33mcommit 2f9f5d8a9015e3366b4d3c607df1ae02d835dc09[m
+Author: crwcln <mrcrow098@gmail.com>
+Date:   Sun Oct 4 16:33:10 2026 -0400
+
+    Initial commit
