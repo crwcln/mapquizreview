@@ -28,41 +28,47 @@ async function hmacHex(secret, msg) {
 }
 
 export async function onRequestPost(context) {
-  let body;
   try {
-    body = await context.request.json();
-  } catch {
-    return json({ ok: false, error: 'bad_request' }, 400);
-  }
-
-  const { target, password } = body || {};
-  if (typeof password !== 'string' || password.length > 200) {
-    return json({ ok: false, error: 'bad_request' }, 400);
-  }
-
-  const secrets = {
-    admin: context.env.ADMIN_PASSWORD,
-    dev: context.env.DEV_PASSWORD,
-  };
-  if (!Object.prototype.hasOwnProperty.call(secrets, target)) {
-    return json({ ok: false, error: 'bad_target' }, 400);
-  }
-  const expected = secrets[target];
-  if (!expected) {
-    return json({ ok: false, error: 'not_configured' }, 500);
-  }
-
-  if (await safeEqual(password, expected)) {
-    const res = { ok: true };
-    if (target === 'admin') {
-      // Short-lived signed token so other admin-only endpoints (e.g. /api/deploy) don't need the password again.
-      const exp = Date.now() + 30 * 60 * 1000;
-      res.token = `${exp}.${await hmacHex(expected, `admin.${exp}`)}`;
+    let body;
+    try {
+      body = await context.request.json();
+    } catch {
+      return json({ ok: false, error: 'bad_request' }, 400);
     }
-    return json(res);
-  }
 
-  // Slow down brute-force attempts
-  await new Promise((r) => setTimeout(r, 500));
-  return json({ ok: false }, 401);
+    const { target, password } = body || {};
+    if (typeof password !== 'string' || password.length > 200) {
+      return json({ ok: false, error: 'bad_request' }, 400);
+    }
+
+    const env = context && context.env ? context.env : {};
+    const secrets = {
+      admin: env.ADMIN_PASSWORD,
+      dev: env.DEV_PASSWORD,
+    };
+    if (!Object.prototype.hasOwnProperty.call(secrets, target)) {
+      return json({ ok: false, error: 'bad_target' }, 400);
+    }
+    const expected = secrets[target];
+    if (!expected) {
+      return json({ ok: false, error: 'not_configured' }, 500);
+    }
+
+    if (await safeEqual(password, expected)) {
+      const res = { ok: true };
+      if (target === 'admin') {
+        // Short-lived signed token so other admin-only endpoints (e.g. /api/deploy) don't need the password again.
+        const exp = Date.now() + 30 * 60 * 1000;
+        res.token = `${exp}.${await hmacHex(expected, `admin.${exp}`)}`;
+      }
+      return json(res);
+    }
+
+    // Slow down brute-force attempts
+    await new Promise((r) => setTimeout(r, 500));
+    return json({ ok: false }, 401);
+  } catch (error) {
+    console.error('Auth edge function failed:', error);
+    return json({ ok: false, error: 'internal_error' }, 500);
+  }
 }
