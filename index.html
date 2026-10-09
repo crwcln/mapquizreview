@@ -61,6 +61,15 @@
         window.__app_id = "map-quiz-2ace3";
     </script>
 
+    <script>
+        // Teaser settings: set enabled to false to show the site normally.
+        // Set artworkImagePath to an image URL or a project-relative asset path to use custom artwork.
+        window.HERO_TEASER_CONFIG = {
+            enabled: true,
+            artworkImagePath: ''
+        };
+    </script>
+
     <script>try{var _t=localStorage.getItem('theme');if(_t==='dark'||(!_t&&window.matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark');}catch(e){}</script>
     <script>
         // Phone detection: phone user-agent / UA-Client-Hints, or a narrow viewport. Tablets and desktops keep the desktop layout.
@@ -242,6 +251,32 @@
         .dark .combo-item:hover, .dark .combo-item.active { background: rgba(15,168,154,.18); color: var(--brand-300); }
         ::-webkit-scrollbar-thumb { background: rgba(98,114,139,.38); }
         #site-cover, .dark #site-cover { background: var(--bg-base); }
+
+        /* HERO announcement teaser */
+        #hero-teaser {
+            position: fixed; inset: 0; z-index: 20000; width: 100%; height: 100%; max-width: none; max-height: none;
+            margin: 0; padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+            box-sizing: border-box; border: 0; overflow: hidden; color: #d9bd76; background: #050912;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+        #hero-teaser::backdrop { background: #050912; }
+        .teaser-scene { position: relative; display: grid; place-items: center; width: 100%; height: 100%; min-height: 100%; overflow: hidden; isolation: isolate; background: radial-gradient(ellipse at 50% 44%, #111724 0%, #090e18 43%, #04070e 100%); }
+        .teaser-scene::before { content: ''; position: absolute; inset: -30%; z-index: -1; opacity: .2; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.23'/%3E%3C/svg%3E"); }
+        .teaser-light { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: #e9bd68; box-shadow: 0 0 12px 3px rgba(209,157,66,.35); opacity: .6; }
+        .teaser-light-one { top: 22%; left: 20%; } .teaser-light-two { top: 31%; right: 19%; width: 1px; height: 1px; opacity: .4; } .teaser-light-three { bottom: 23%; left: 29%; width: 1px; height: 1px; opacity: .32; }
+        .teaser-fog { position: absolute; z-index: -1; width: 78vw; height: 30vh; min-height: 180px; border-radius: 50%; pointer-events: none; filter: blur(48px); opacity: .11; background: radial-gradient(ellipse, rgba(180,181,181,.7), rgba(89,103,119,.16) 48%, transparent 72%); animation: teaser-drift 38s ease-in-out infinite alternate; }
+        .teaser-fog-one { top: 22%; left: -25%; transform: rotate(-12deg); }
+        .teaser-fog-two { top: 48%; right: -30%; opacity: .09; animation-duration: 52s; animation-delay: -19s; transform: rotate(14deg); }
+        .teaser-fog-three { bottom: -15%; left: 4%; opacity: .07; animation-duration: 64s; animation-delay: -31s; }
+        @keyframes teaser-drift { from { translate: -5% 0; scale: .96 1; } to { translate: 13% 7%; scale: 1.12 .9; } }
+        .teaser-content { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; width: min(100%, 760px); height: 100%; padding: 24px; padding-bottom: max(24px, env(safe-area-inset-bottom, 0px)); text-align: center; }
+        .teaser-art { position: relative; display: grid; place-items: center; width: clamp(72px, 12vw, 112px); aspect-ratio: 1; margin-bottom: clamp(70px, 15vh, 150px); border: 1px solid rgba(200,166,89,.58); color: #c5a858; box-shadow: 0 0 28px rgba(157,124,55,.08), inset 0 0 24px rgba(157,124,55,.07); }
+        .teaser-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(145deg, transparent 28%, rgba(0,0,0,.72) 54%, rgba(0,0,0,.2) 77%, transparent); }
+        .teaser-art-glyph { font-size: clamp(42px, 7vw, 66px); line-height: 1; text-shadow: 0 0 16px rgba(194,158,75,.25); }
+        .teaser-art-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+        .teaser-wordmark { margin: 0 0 14px; padding-left: .3em; color: #d8bd79; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2.4rem, 8vw, 5.2rem); font-weight: 400; line-height: 1; letter-spacing: .3em; text-indent: .3em; text-shadow: 0 2px 25px rgba(201,163,78,.18); }
+        .teaser-tagline { margin: 0; color: rgba(220,219,207,.7); font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: clamp(.66rem, 2.1vw, .84rem); font-weight: 500; letter-spacing: .28em; text-indent: .28em; }
+        @media (prefers-reduced-motion: reduce) { .teaser-fog { animation: none; translate: 0 0; } }
         .cover-spin { border: 4px solid rgba(15,168,154,.2); border-top-color: var(--brand-500); }
         #mobile-tabbar button.active { color: var(--brand-700); background: rgba(15,168,154,.12); }
         .dark #mobile-tabbar button.active { color: var(--brand-300); background: rgba(15,168,154,.2); }
@@ -289,6 +324,49 @@
 </head>
 <body class="text-slate-800 dark:text-slate-200 transition-colors duration-300">
 
+    <script>
+        (function () {
+            var config = window.HERO_TEASER_CONFIG || {};
+            if (!config.enabled) return;
+
+            var dialog = document.createElement('dialog');
+            dialog.id = 'hero-teaser';
+            dialog.setAttribute('tabindex', '-1');
+            dialog.setAttribute('aria-modal', 'true');
+            dialog.setAttribute('aria-labelledby', 'teaser-wordmark');
+            dialog.setAttribute('aria-describedby', 'teaser-tagline');
+            dialog.setAttribute('aria-label', 'HERO announcement');
+            dialog.innerHTML = '<div class="teaser-scene">' +
+                '<span class="teaser-light teaser-light-one" aria-hidden="true"></span>' +
+                '<span class="teaser-light teaser-light-two" aria-hidden="true"></span>' +
+                '<span class="teaser-light teaser-light-three" aria-hidden="true"></span>' +
+                '<span class="teaser-fog teaser-fog-one" aria-hidden="true"></span>' +
+                '<span class="teaser-fog teaser-fog-two" aria-hidden="true"></span>' +
+                '<span class="teaser-fog teaser-fog-three" aria-hidden="true"></span>' +
+                '<div class="teaser-content"><div class="teaser-art" aria-hidden="true">' +
+                '<span class="teaser-art-glyph">H</span></div>' +
+                '<h1 class="teaser-wordmark" id="teaser-wordmark">HERO</h1>' +
+                '<p class="teaser-tagline" id="teaser-tagline">SOMETHING IS COMING</p></div></div>';
+
+            if (config.artworkImagePath) {
+                dialog.querySelector('.teaser-art').removeAttribute('aria-hidden');
+                var artwork = document.createElement('img');
+                artwork.className = 'teaser-art-image';
+                artwork.src = config.artworkImagePath;
+                artwork.alt = 'Gold H emblem in a square frame';
+                artwork.onload = function () {
+                    var glyph = dialog.querySelector('.teaser-art-glyph');
+                    if (glyph) glyph.hidden = true;
+                };
+                dialog.querySelector('.teaser-art').appendChild(artwork);
+            }
+
+            dialog.addEventListener('cancel', function (event) { event.preventDefault(); });
+            document.body.insertBefore(dialog, document.body.firstChild);
+            dialog.showModal();
+            dialog.focus();
+        })();
+    </script>
     <div id="site-cover"><div class="cover-spin"></div></div>
 
     <div id="toast-container" class="fixed bottom-6 right-6 z-[10000] flex flex-col gap-3 pointer-events-none"></div>
