@@ -378,7 +378,7 @@
                         row.className = 'teaser-reaction'; name.textContent = data.name || 'Anonymous'; message.textContent = data.message || ''; date.textContent = data.createdAt && data.createdAt.toDate ? data.createdAt.toDate().toLocaleString() : 'Just received';
                         row.append(name, message, date); box.appendChild(row);
                     });
-                }, function (error) { console.error('Reaction log:', error); box.textContent = 'The dispatch ledger could not be read.'; });
+                }, function (error) { console.error('Reaction log:', error); box.textContent = 'The dispatch ledger could not be read (' + (error.code || 'unknown error') + ').'; });
             }
             window.addEventListener('mq-auth-ready', function () { if (teaserDevAuthorized) renderReactions(); });
             function revealDevData() {
@@ -404,7 +404,7 @@
                 try {
                     await db.collection('artifacts').doc(appId).collection('public').doc('data').collection('heroReactions').add({ name: name.slice(0, 60), message: message.slice(0, 500), userId: userId, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
                     nameField.value = ''; messageField.value = ''; feedback.textContent = 'Your dispatch has been entered into the record.';
-                } catch (error) { console.error('Could not save reaction:', error); feedback.textContent = 'Your dispatch could not be delivered. Please try again.'; }
+                } catch (error) { console.error('Could not save reaction:', error); feedback.textContent = 'Your dispatch could not be delivered (' + (error.code || 'unknown error') + '). Please try again.'; }
                 finally { button.disabled = false; }
             });
             if (config.artworkImagePath) { var art = dialog.querySelector('.teaser-art'), img = document.createElement('img'); img.className = 'teaser-art-image'; img.src = config.artworkImagePath; img.alt = 'Gold H emblem in a square frame'; img.onload = function () { var glyph = dialog.querySelector('.teaser-art-glyph'); if (glyph) glyph.hidden = true; }; art.appendChild(img); }
