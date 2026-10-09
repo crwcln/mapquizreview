@@ -274,6 +274,7 @@
         @keyframes teaser-ambient { from { transform: translate3d(-3%, -2%, 0) rotate(-3deg) scale(.96); opacity: .28; } to { transform: translate3d(4%, 3%, 0) rotate(4deg) scale(1.08); opacity: .55; } }
         @keyframes teaser-firefly { 0%, 100% { opacity: .2; transform: translate3d(0, 0, 0) scale(.8); } 45% { opacity: .72; } 70% { opacity: .35; transform: translate3d(8px, -13px, 0) scale(1.35); } }
         @keyframes teaser-grain { 0% { transform: translate(0, 0); } 33% { transform: translate(-1%, 1%); } 66% { transform: translate(1%, -1%); } 100% { transform: translate(0, 0); } }
+        #hero-teaser [hidden] { display: none !important; }
         .teaser-content { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; width: min(100%, 760px); height: 100%; padding: 24px; padding-bottom: max(24px, env(safe-area-inset-bottom, 0px)); text-align: center; }
         .teaser-art { position: relative; display: grid; place-items: center; width: clamp(72px, 12vw, 112px); aspect-ratio: 1; margin-bottom: clamp(70px, 15vh, 150px); border: 1px solid rgba(200,166,89,.58); color: #c5a858; box-shadow: 0 0 28px rgba(157,124,55,.08), inset 0 0 24px rgba(157,124,55,.07); }
         .teaser-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(145deg, transparent 28%, rgba(0,0,0,.72) 54%, rgba(0,0,0,.2) 77%, transparent); }
@@ -282,6 +283,18 @@
         .teaser-wordmark { margin: 0 0 14px; padding-left: .3em; color: #d8bd79; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2.4rem, 8vw, 5.2rem); font-weight: 400; line-height: 1; letter-spacing: .3em; text-indent: .3em; text-shadow: 0 2px 25px rgba(201,163,78,.18); }
         .teaser-tagline { margin: 0; color: rgba(220,219,207,.7); font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: clamp(.66rem, 2.1vw, .84rem); font-weight: 500; letter-spacing: .28em; text-indent: .28em; }
         .teaser-date { margin: clamp(30px, 7vh, 64px) 0 0; color: rgba(203,177,116,.78); font-family: 'Plus Jakarta Sans', Arial, sans-serif; font-size: .68rem; font-weight: 600; letter-spacing: .34em; text-indent: .34em; }
+        .teaser-ledger { width: min(100%, 620px); max-height: min(82vh, 820px); overflow-y: auto; padding: 30px; border: 1px solid rgba(200,166,89,.34); background: rgba(5,9,18,.86); box-shadow: 0 24px 90px rgba(0,0,0,.48); text-align: left; }
+        .teaser-ledger h2 { margin: 0; color: #d8bd79; font-size: clamp(1.5rem, 5vw, 2.25rem); font-weight: 400; }
+        .teaser-ledger p { color: rgba(220,219,207,.7); font: 500 .9rem/1.6 'Plus Jakarta Sans', Arial, sans-serif; }
+        .teaser-ledger-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin: 22px 0; }
+        .teaser-ledger-stat { border: 1px solid rgba(200,166,89,.2); padding: 13px; color: rgba(220,219,207,.7); font: 500 .75rem 'Plus Jakarta Sans', Arial, sans-serif; }
+        .teaser-ledger-stat strong { display: block; color: #d8bd79; font: 400 1.6rem Georgia,serif; margin-bottom: 5px; }
+        .teaser-ledger textarea { width: 100%; min-height: 88px; resize: vertical; padding: 12px; color: #eee8d7; background: rgba(255,255,255,.06); border: 1px solid rgba(200,166,89,.3); outline: none; font: 500 .9rem/1.5 'Plus Jakarta Sans',Arial,sans-serif; }
+        .teaser-ledger button { margin-top: 10px; padding: 10px 15px; color: #17130a; background: #c5a858; font: 700 .75rem 'Plus Jakarta Sans',Arial,sans-serif; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+        #teaser-reactions { max-height: 180px; overflow: auto; margin-top: 14px; }
+        .teaser-reaction { padding: 10px 0; border-top: 1px solid rgba(200,166,89,.16); color: rgba(220,219,207,.82); font: 500 .82rem/1.5 'Plus Jakarta Sans',Arial,sans-serif; white-space: pre-wrap; overflow-wrap: anywhere; }
+        .teaser-close { position: absolute; top: 18px; right: 18px; border: 1px solid rgba(200,166,89,.35); color: #d8bd79; background: rgba(5,9,18,.65); padding: 9px 12px; cursor: pointer; font: 600 .7rem 'Plus Jakarta Sans',Arial,sans-serif; letter-spacing: .1em; }
+        @media (max-width: 560px) { .teaser-ledger { padding: 20px; } }
         @media (prefers-reduced-motion: reduce) { #hero-teaser *, #hero-teaser::before, #hero-teaser::after { animation: none !important; scroll-behavior: auto !important; } .teaser-fog { translate: 0 0; } }
         .cover-spin { border: 4px solid rgba(15,168,154,.2); border-top-color: var(--brand-500); }
         #mobile-tabbar button.active { color: var(--brand-700); background: rgba(15,168,154,.12); }
@@ -334,45 +347,51 @@
         (function () {
             var config = window.HERO_TEASER_CONFIG || {};
             if (!config.enabled) return;
-
+            var counts = { clicks: 0, drags: 0, selections: 0, typing: 0 };
+            try { counts = Object.assign(counts, JSON.parse(sessionStorage.getItem('heroTeaserInteractions') || '{}')); } catch (e) {}
             var dialog = document.createElement('dialog');
             dialog.id = 'hero-teaser';
             dialog.setAttribute('tabindex', '-1');
             dialog.setAttribute('aria-modal', 'true');
-            dialog.setAttribute('aria-labelledby', 'teaser-wordmark');
-            dialog.setAttribute('aria-describedby', 'teaser-tagline teaser-date');
-            dialog.setAttribute('aria-label', 'HERO announcement');
-            dialog.innerHTML = '<div class="teaser-scene">' +
-                '<span class="teaser-ambient" aria-hidden="true"></span>' +
-                '<span class="teaser-light teaser-light-one" aria-hidden="true"></span>' +
-                '<span class="teaser-light teaser-light-two" aria-hidden="true"></span>' +
-                '<span class="teaser-light teaser-light-three" aria-hidden="true"></span>' +
-                '<span class="teaser-fog teaser-fog-one" aria-hidden="true"></span>' +
-                '<span class="teaser-fog teaser-fog-two" aria-hidden="true"></span>' +
-                '<span class="teaser-fog teaser-fog-three" aria-hidden="true"></span>' +
-                '<div class="teaser-content"><div class="teaser-art" aria-hidden="true">' +
-                '<span class="teaser-art-glyph">H</span></div>' +
-                '<h1 class="teaser-wordmark" id="teaser-wordmark">HERO</h1>' +
-                '<p class="teaser-tagline" id="teaser-tagline">SOMETHING IS COMING</p>' +
-                '<p class="teaser-date" id="teaser-date">OCTOBER 20TH</p></div></div>';
-
-            if (config.artworkImagePath) {
-                dialog.querySelector('.teaser-art').removeAttribute('aria-hidden');
-                var artwork = document.createElement('img');
-                artwork.className = 'teaser-art-image';
-                artwork.src = config.artworkImagePath;
-                artwork.alt = 'Gold H emblem in a square frame';
-                artwork.onload = function () {
-                    var glyph = dialog.querySelector('.teaser-art-glyph');
-                    if (glyph) glyph.hidden = true;
-                };
-                dialog.querySelector('.teaser-art').appendChild(artwork);
+            dialog.setAttribute('aria-label', 'HERO teaser and visitor ledger');
+            dialog.innerHTML = '<div class="teaser-scene"><span class="teaser-ambient" aria-hidden="true"></span><span class="teaser-light teaser-light-one" aria-hidden="true"></span><span class="teaser-light teaser-light-two" aria-hidden="true"></span><span class="teaser-light teaser-light-three" aria-hidden="true"></span><span class="teaser-fog teaser-fog-one" aria-hidden="true"></span><span class="teaser-fog teaser-fog-two" aria-hidden="true"></span><span class="teaser-fog teaser-fog-three" aria-hidden="true"></span><button class="teaser-close" type="button" aria-label="Close teaser">CLOSE</button><div class="teaser-content"><div class="teaser-art" aria-hidden="true"><span class="teaser-art-glyph">H</span></div><h1 class="teaser-wordmark">HERO</h1><p class="teaser-tagline">SOMETHING IS COMING</p><p class="teaser-date">OCTOBER 20TH</p></div><section class="teaser-ledger" hidden aria-labelledby="teaser-ledger-title"><h2 id="teaser-ledger-title">A record of your visit</h2><p>The pages keep a modest account of their passage: each click, drag, marked line, and keystroke.</p><div class="teaser-ledger-grid"><div class="teaser-ledger-stat"><strong id="teaser-clicks">0</strong>Page clicks</div><div class="teaser-ledger-stat"><strong id="teaser-drags">0</strong>Drags</div><div class="teaser-ledger-stat"><strong id="teaser-selections">0</strong>Text selections</div><div class="teaser-ledger-stat"><strong id="teaser-typing">0</strong>Keystrokes</div></div><label for="teaser-thought">What counsel or impression would you enter in the record?</label><textarea id="teaser-thought" maxlength="500" placeholder="Set down your thoughts here"></textarea><button id="teaser-send" type="button">Commit to the ledger</button><p id="teaser-feedback" aria-live="polite"></p><div id="teaser-reactions" aria-live="polite"></div></section></div>';
+            var content = dialog.querySelector('.teaser-content'), ledger = dialog.querySelector('.teaser-ledger');
+            function refresh() {
+                Object.keys(counts).forEach(function (key) { var el = dialog.querySelector('#teaser-' + key); if (el) el.textContent = counts[key]; });
+                try { sessionStorage.setItem('heroTeaserInteractions', JSON.stringify(counts)); } catch (e) {}
             }
-
-            dialog.addEventListener('cancel', function (event) { event.preventDefault(); });
+            function renderReactions() {
+                var box = dialog.querySelector('#teaser-reactions'), items = [];
+                try { items = JSON.parse(localStorage.getItem('heroTeaserReactions') || '[]'); } catch (e) {}
+                box.innerHTML = '';
+                items.slice().reverse().forEach(function (item) { var row = document.createElement('div'); row.className = 'teaser-reaction'; row.textContent = item; box.appendChild(row); });
+            }
+            dialog.querySelector('.teaser-close').addEventListener('click', function () { dialog.close(); });
+            dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
+            dialog.querySelector('#teaser-send').addEventListener('click', function () {
+                var field = dialog.querySelector('#teaser-thought'), thought = field.value.trim();
+                if (!thought) { dialog.querySelector('#teaser-feedback').textContent = 'Pray, set down a few words first.'; field.focus(); return; }
+                var items = []; try { items = JSON.parse(localStorage.getItem('heroTeaserReactions') || '[]'); } catch (e) {}
+                items.push(thought); try { localStorage.setItem('heroTeaserReactions', JSON.stringify(items.slice(-30))); } catch (e) {}
+                field.value = ''; dialog.querySelector('#teaser-feedback').textContent = 'Your words have been entered into this local ledger.'; renderReactions();
+            });
+            if (config.artworkImagePath) { var art = dialog.querySelector('.teaser-art'), img = document.createElement('img'); img.className = 'teaser-art-image'; img.src = config.artworkImagePath; img.alt = 'Gold H emblem in a square frame'; img.onload = function () { var glyph = dialog.querySelector('.teaser-art-glyph'); if (glyph) glyph.hidden = true; }; art.appendChild(img); }
+            dialog.addEventListener('cancel', function (event) { event.preventDefault(); dialog.close(); });
             document.body.insertBefore(dialog, document.body.firstChild);
-            dialog.showModal();
-            dialog.focus();
+            var keyBuffer = '';
+            document.addEventListener('keydown', function (event) {
+                if (!dialog.open && !event.ctrlKey && !event.metaKey && !event.altKey && event.key.length === 1) {
+                    keyBuffer = (keyBuffer + event.key.toLowerCase()).slice(-5);
+                    if (keyBuffer === 'manoj') { content.hidden = true; ledger.hidden = false; refresh(); renderReactions(); dialog.showModal(); dialog.focus(); }
+                }
+                if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey && !(dialog.open && dialog.querySelector('#teaser-thought').contains(event.target))) { counts.typing++; refresh(); }
+            }, true);
+            document.addEventListener('click', function (event) { if (!dialog.open || !dialog.contains(event.target)) { counts.clicks++; refresh(); } }, true);
+            var down = null;
+            document.addEventListener('pointerdown', function (event) { if (!dialog.contains(event.target)) down = { x: event.clientX, y: event.clientY }; }, true);
+            document.addEventListener('pointerup', function (event) { if (down && Math.hypot(event.clientX-down.x,event.clientY-down.y)>12) { counts.drags++; refresh(); } down = null; }, true);
+            var hadSelection = false;
+            document.addEventListener('selectionchange', function () { var hasSelection = !!String(window.getSelection() || '').trim(); if (hasSelection && !hadSelection) { counts.selections++; refresh(); } hadSelection = hasSelection; });
         })();
     </script>
     <div id="site-cover"><div class="cover-spin"></div></div>
