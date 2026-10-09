@@ -414,7 +414,7 @@
             var keyBuffer = '';
             document.addEventListener('keydown', function (event) {
                 if (dialog.open && event.key === 'Escape') { event.preventDefault(); return; }
-                if (dialog.open && !event.ctrlKey && !event.metaKey && !event.altKey && event.key.length === 1) {
+                if (dialog.open && event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA' && !event.ctrlKey && !event.metaKey && !event.altKey && event.key.length === 1) {
                     keyBuffer = (keyBuffer + event.key.toLowerCase()).slice(-5);
                     if (keyBuffer === 'manoj') { content.hidden = true; ledger.hidden = false; revealDevData(); dialog.focus(); }
                 }
