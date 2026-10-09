@@ -368,7 +368,7 @@
             }
             function renderReactions() {
                 var box = dialog.querySelector('#teaser-reactions');
-                if (!db || !userId) { box.textContent = 'The records cannot be reached while offline.'; return; }
+                if (!db || !userId) { box.textContent = db ? 'Connecting to the record office…' : 'The records cannot be reached while offline.'; return; }
                 if (reactionUnsubscribe) reactionUnsubscribe();
                 reactionUnsubscribe = db.collection('artifacts').doc(appId).collection('public').doc('data').collection('heroReactions').orderBy('createdAt', 'desc').onSnapshot(function (snapshot) {
                     box.innerHTML = '';
@@ -380,6 +380,7 @@
                     });
                 }, function (error) { console.error('Reaction log:', error); box.textContent = 'The dispatch ledger could not be read.'; });
             }
+            window.addEventListener('mq-auth-ready', function () { if (teaserDevAuthorized) renderReactions(); });
             function revealDevData() {
                 if (teaserDevAuthorized) {
                     devAuth.hidden = true; devData.hidden = false; refresh(); renderReactions();
@@ -1180,6 +1181,7 @@
                     auth.onAuthStateChanged(user => {
                         if (user) {
                             userId = user.uid;
+                            window.dispatchEvent(new Event('mq-auth-ready'));
                             loadGlobalSettings();
                             loadLeaderboard();
                             loadChangelog(); loadSiteMode(); loadVisits(); countVisit();
